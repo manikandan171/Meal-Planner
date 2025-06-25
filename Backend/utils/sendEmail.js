@@ -10,7 +10,7 @@ export const sendEmail = async (to, subject, text) => {
   });
 
   await transporter.sendMail({
-    from: process.env.EMAIL_USER,
+    from: `Meal Planner <${process.env.EMAIL_USER}>`,
     to,
     subject,
     text,

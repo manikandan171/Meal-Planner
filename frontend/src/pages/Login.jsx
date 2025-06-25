@@ -8,11 +8,15 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     try {
       await login(email, password);
+      setSuccess('Login successful!');
     } catch (err) {
       setError(err?.response?.data?.message || 'Invalid credentials');
     }
@@ -30,6 +34,7 @@ const Login = () => {
         <Link to="/forgot-password">Forgot Password?</Link>
       </div>
       {error && <p className="error">{error}</p>}
+      {success && <p className="success">{success}</p>}
     </div>
   );
 };
