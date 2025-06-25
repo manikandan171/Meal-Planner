@@ -1,8 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import { connectDB } from './config/db.js';
 import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
 
 import authRoutes from './routes/auth.js';
 import recipeRoutes from './routes/recipe.js';
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
   res.send('Smart Meal Planner API is running');
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

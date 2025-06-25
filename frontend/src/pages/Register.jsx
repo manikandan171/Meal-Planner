@@ -1,47 +1,58 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../hooks/AuthContext';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './Auth.css';
 
 const Register = () => {
-  const { register } = useContext(AuthContext);
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    password: '',
-    dietaryPreferences: '',
-    allergies: ''
-  });
+  const [step, setStep] = useState(1);
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [otp, setOtp] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      await axios.post('/api/auth/register', form);
+      setEmail(form.email);
+      setStep(2);
+      setMessage('OTP sent to your email. Please verify.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed');
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      await register({
-        ...form,
-        dietaryPreferences: form.dietaryPreferences.split(',').map(s => s.trim()),
-        allergies: form.allergies.split(',').map(s => s.trim())
-      });
+      await axios.post('/api/auth/verify-otp', { email, otp });
+      setMessage('Account verified! You can now log in.');
+      setStep(3);
     } catch (err) {
-      setError('Registration failed');
+      setError(err.response?.data?.message || 'OTP verification failed');
     }
   };
 
   return (
     <div className="auth-container">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-        <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-        <input name="dietaryPreferences" placeholder="Dietary Preferences (comma separated)" value={form.dietaryPreferences} onChange={handleChange} />
-        <input name="allergies" placeholder="Allergies (comma separated)" value={form.allergies} onChange={handleChange} />
-        <button type="submit">Register</button>
-      </form>
-      {error && <p className="error">{error}</p>}
+      {step === 1 && (
+        <form onSubmit={handleRegister}>
+          <input name="name" placeholder="Full Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
+          <input name="email" type="email" placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
+          <input name="password" type="password" placeholder="Password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required />
+          <button type="submit">Register</button>
+        </form>
+      )}
+      {step === 2 && (
+        <form onSubmit={handleVerify}>
+          <input name="otp" placeholder="Enter OTP" value={otp} onChange={e => setOtp(e.target.value)} required />
+          <button type="submit">Verify OTP</button>
+        </form>
+      )}
+      {message && <div className="success">{message}</div>}
+      {error && <div className="error">{error}</div>}
     </div>
   );
 };

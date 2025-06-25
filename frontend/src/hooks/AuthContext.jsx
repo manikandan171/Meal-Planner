@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { register as apiRegister, login as apiLogin, getProfile } from '../api';
 
 export const AuthContext = createContext();
 
@@ -8,24 +9,43 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      // Optionally fetch user profile here
-      setUser({}); // Placeholder
-    }
-    setLoading(false);
+    const fetchProfile = async () => {
+      if (token) {
+        try {
+          const res = await getProfile();
+          setUser(res.data);
+        } catch {
+          setUser(null);
+          setToken(null);
+          localStorage.removeItem('token');
+        }
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    };
+    fetchProfile();
+    // eslint-disable-next-line
   }, [token]);
 
   const login = async (email, password) => {
-    // Call backend API
-    // On success:
-    // setToken(tokenFromServer);
-    // setUser(userFromServer);
-    // localStorage.setItem('token', tokenFromServer);
+    const res = await apiLogin({ email, password });
+    setToken(res.data.token);
+    setUser(res.data.user);
+    localStorage.setItem('token', res.data.token);
   };
 
   const register = async (data) => {
-    // Call backend API
-    // On success, call login
+    try {
+      await apiRegister(data); // Register the user
+      // After successful registration, log in automatically
+      const res = await apiLogin({ email: data.email, password: data.password });
+      setToken(res.data.token);
+      setUser(res.data.user);
+      localStorage.setItem('token', res.data.token);
+    } catch (err) {
+      throw err.response?.data?.message || 'Registration failed';
+    }
   };
 
   const logout = () => {

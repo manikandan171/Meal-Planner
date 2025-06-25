@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../hooks/AuthContext';
 import './Auth.css';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -13,7 +14,7 @@ const Login = () => {
     try {
       await login(email, password);
     } catch (err) {
-      setError('Invalid credentials');
+      setError(err?.response?.data?.message || 'Invalid credentials');
     }
   };
 
@@ -25,6 +26,9 @@ const Login = () => {
         <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
         <button type="submit">Login</button>
       </form>
+      <div style={{ marginTop: '1rem' }}>
+        <Link to="/forgot-password">Forgot Password?</Link>
+      </div>
       {error && <p className="error">{error}</p>}
     </div>
   );

@@ -1,9 +1,9 @@
 .nutrition-main {
   max-width: 600px;
   margin: 2rem auto;
-  background: #fff;
+  background: var(--color-accent1);
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(99,102,241,0.08);
   padding: 2rem;
 }
 .nutrition-bars {
@@ -15,14 +15,14 @@
 .bar-bg {
   width: 100%;
   height: 18px;
-  background: #e0e7ff;
+  background: var(--color-accent2);
   border-radius: 8px;
   overflow: hidden;
   margin-top: 0.3rem;
 }
 .bar-fill {
   height: 100%;
-  background: #6366f1;
+  background: var(--color-accent3);
   border-radius: 8px 0 0 8px;
   transition: width 0.5s;
 }
@@ -34,4 +34,28 @@
   padding: 1rem;
   margin-bottom: 1rem;
   text-align: center;
+}
+@media (max-width: 700px) {
+  .nutrition-main {
+    max-width: 98vw;
+    padding: 1rem 0.5rem;
+    border-radius: 8px;
+  }
+  .bar-bg {
+    height: 14px;
+  }
+}
+@media (max-width: 500px) {
+  .nutrition-main {
+    padding: 0.5rem 0.1rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .bar-bg {
+    height: 10px;
+  }
+  .error-msg {
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
 } 

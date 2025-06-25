@@ -1,3 +1,19 @@
+/* Color palette from user image */
+:root {
+  --color-bg: #fafafa;
+  --color-accent1: #eafaff;
+  --color-accent2: #c7dcff;
+  --color-accent3: #c7baff;
+  --color-primary: #6366f1;
+  --color-text: #3730a3;
+  --color-card: #fff;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

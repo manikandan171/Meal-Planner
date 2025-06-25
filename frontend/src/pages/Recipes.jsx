@@ -34,17 +34,18 @@ const Recipes = () => {
     setLoading(true);
     setError('');
     try {
+      const ingredientsArr = form.ingredients.split(',').map(i => ({ name: i.trim(), quantity: '' }));
       if (editingId) {
-        await updateRecipe(editingId, { ...form, nutrition: getNutritionObj(form) });
+        await updateRecipe(editingId, { ...form, ingredients: ingredientsArr, nutrition: getNutritionObj(form) });
       } else {
-        await createRecipe({ ...form, nutrition: getNutritionObj(form) });
+        await createRecipe({ ...form, ingredients: ingredientsArr, nutrition: getNutritionObj(form) });
       }
       setForm(emptyRecipe);
       setEditingId(null);
       setShowForm(false);
       fetchRecipes();
     } catch (err) {
-      setError('Could not connect to the server. Please try again later.');
+      setError(err.response?.data?.message || 'Could not connect to the server. Please try again later.');
     }
     setLoading(false);
   };
