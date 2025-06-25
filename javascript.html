@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Greet User</title>
+</head>
+<body>
+
+  <label for="name">Name:</label><br>
+  <input type="text" name="name" id="name">
+  <button onclick="hi()">Click</button>
+
+  <div id="greet"></div>
+
+  <script>
+    function hi() {
+      const name = document.getElementById('name').value;
+      document.getElementById('greet').innerText = `Hi ${name}`;
+    }
+  </script>
+
+</body>
+</html>

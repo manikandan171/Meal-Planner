@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Grid Example</title>
+  <style>
+    .grid-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 10px;
+      padding: 10px;
+      font-family: sans-serif;
+    }
+
+    .grid-item {
+      background-color: #3498db;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 30px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 1px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      grid-column: 1 / 4;
+      background-color: orange;
+    }
+
+    .main {
+      background-color: deepskyblue;
+    }
+
+    .empty {
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
+    }
+
+    .sidebar {
+      background-color: lightcoral;
+    }
+
+    .footer {
+      grid-column: 1 / 4;
+      background-color: green;
+    }
+        
+    @media (max-width: 470px) {
+      .grid-container {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grid-container">
+    <div class="grid-item header">header</div>
+    <div class="grid-item main">main</div>
+    <div class="grid-item empty">empty</div>
+    <div class="grid-item sidebar">sidebar</div>
+    <div class="grid-item footer">footer</div>
+  </div>
+
+</body>
+</html>

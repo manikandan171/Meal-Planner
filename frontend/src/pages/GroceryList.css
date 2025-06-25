@@ -1,0 +1,40 @@
+.grocerylist-main {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 2rem;
+}
+.grocery-list {
+  list-style: none;
+  padding: 0;
+}
+.grocery-list li {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+.grocery-list li.checked {
+  background: #e0e7ff;
+  text-decoration: line-through;
+  color: #a5b4fc;
+}
+.grocery-list input[type="checkbox"] {
+  margin-right: 1rem;
+  accent-color: #6366f1;
+}
+.error-msg {
+  color: #dc2626;
+  background: #fff7f7;
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+} 

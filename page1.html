@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>4 Page Scroll Website</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      position: relative;
+    }
+
+    
+    section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      padding-top: 60px; /* space for fixed nav */
+    }
+
+    #page1 { background: #3498db; }
+    #page2 { background: #2ecc71; }
+    #page3 { background: #e67e22; }
+    #page4 { background: #9b59b6; }
+
+    .sticky-box {
+      position: sticky;
+      top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+
+  <!-- Scrollable Pages -->
+  <section id="page1">
+    Welcome to Page 1
+    <div class="sticky-box">I stay on top in Page 1!</div>
+  </section>
+
+  <section id="page2">
+    Welcome to Page 2
+  </section>
+
+  <section id="page3">
+    Welcome to Page 3
+  </section>
+
+  <section id="page4">
+    Welcome to Page 4
+  </section>
+
+</body>
+</html>
