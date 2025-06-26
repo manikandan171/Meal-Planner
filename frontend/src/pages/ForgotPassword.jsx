@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { forgotPassword as forgotPasswordApi, resetPassword as resetPasswordApi } from '../api';
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -13,7 +14,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('/api/auth/forgot-password', { email });
+      await forgotPasswordApi({ email });
       setStep(2);
       setMessage('OTP sent to your email.');
     } catch (err) {
@@ -25,7 +26,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('/api/auth/reset-password', { email, otp, newPassword });
+      await resetPasswordApi({ email, otp, newPassword });
       setMessage('Password reset successful! You can now log in.');
       setStep(3);
     } catch (err) {
