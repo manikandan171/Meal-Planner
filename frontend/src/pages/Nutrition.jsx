@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { getNutrition } from '../api';
 import './Nutrition.css';
+import { AuthContext } from '../hooks/AuthContext';
 
 const Nutrition = () => {
+  const { user } = useContext(AuthContext);
   const [nutrition, setNutrition] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
   const [error, setError] = useState('');
   useEffect(() => {
@@ -28,26 +30,32 @@ const Nutrition = () => {
 
   return (
     <div className="nutrition-main">
-      <h2>Weekly Nutrition Summary</h2>
-      {error && <div className="error-msg">{error}</div>}
-      <div className="nutrition-bars">
-        <div className="nutri-bar">
-          <span>Calories: {nutrition.calories} / {goals.calories * 7}</span>
-          <div className="bar-bg"><div className="bar-fill" style={{width: getPercent(nutrition.calories, goals.calories * 7) + '%'}} /></div>
-        </div>
-        <div className="nutri-bar">
-          <span>Protein: {nutrition.protein}g / {goals.protein * 7}g</span>
-          <div className="bar-bg"><div className="bar-fill" style={{width: getPercent(nutrition.protein, goals.protein * 7) + '%', background: '#22c55e'}} /></div>
-        </div>
-        <div className="nutri-bar">
-          <span>Carbs: {nutrition.carbs}g / {goals.carbs * 7}g</span>
-          <div className="bar-bg"><div className="bar-fill" style={{width: getPercent(nutrition.carbs, goals.carbs * 7) + '%', background: '#f59e42'}} /></div>
-        </div>
-        <div className="nutri-bar">
-          <span>Fat: {nutrition.fat}g / {goals.fat * 7}g</span>
-          <div className="bar-bg"><div className="bar-fill" style={{width: getPercent(nutrition.fat, goals.fat * 7) + '%', background: '#f43f5e'}} /></div>
-        </div>
-      </div>
+      {(!user) ? (
+        <div className="error-msg">Please login to view your data.</div>
+      ) : (
+        <>
+          <h2>Weekly Nutrition Summary</h2>
+          {error && <div className="error-msg">{error}</div>}
+          <div className="nutrition-bars">
+            <div className="nutri-bar">
+              <span>Calories: {nutrition.calories} / {goals.calories * 7}</span>
+              <div className="bar-bg"><div className="bar-fill" style={{width: getPercent(nutrition.calories, goals.calories * 7) + '%'}} /></div>
+            </div>
+            <div className="nutri-bar">
+              <span>Protein: {nutrition.protein}g / {goals.protein * 7}g</span>
+              <div className="bar-bg"><div className="bar-fill" style={{width: getPercent(nutrition.protein, goals.protein * 7) + '%', background: '#22c55e'}} /></div>
+            </div>
+            <div className="nutri-bar">
+              <span>Carbs: {nutrition.carbs}g / {goals.carbs * 7}g</span>
+              <div className="bar-bg"><div className="bar-fill" style={{width: getPercent(nutrition.carbs, goals.carbs * 7) + '%', background: '#f59e42'}} /></div>
+            </div>
+            <div className="nutri-bar">
+              <span>Fat: {nutrition.fat}g / {goals.fat * 7}g</span>
+              <div className="bar-bg"><div className="bar-fill" style={{width: getPercent(nutrition.fat, goals.fat * 7) + '%', background: '#f43f5e'}} /></div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

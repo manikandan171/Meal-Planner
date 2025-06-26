@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { getMealPlans, createMealPlan, getRecipes } from '../api';
 import './MealPlanner.css';
+import { AuthContext } from '../hooks/AuthContext';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const mealTypes = ['breakfast', 'lunch', 'dinner', 'snack'];
 
 const MealPlanner = () => {
+  const { user } = useContext(AuthContext);
   const [mealPlans, setMealPlans] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [selected, setSelected] = useState({});
@@ -58,44 +60,50 @@ const MealPlanner = () => {
 
   return (
     <div className="mealplanner-main">
-      <h2>Weekly Meal Planner</h2>
-      {error && <div className="error-msg">{error}</div>}
-      <div className="planner-table-wrapper">
-        <table className="planner-table">
-          <thead>
-            <tr>
-              <th>Day</th>
-              {mealTypes.map(type => <th key={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {daysOfWeek.map((day, idx) => (
-              <tr key={day} className={idx === todayIdx ? 'today-row' : ''}>
-                <td>{day}</td>
-                {mealTypes.map(type => (
-                  <td key={type}>
-                    <select value={selected[`${day}-${type}`] || ''} onChange={e => handleSelect(day, type, e.target.value)}>
-                      <option value="">--</option>
-                      {recipes.map(r => <option key={r._id} value={r._id}>{r.title}</option>)}
-                    </select>
-                  </td>
+      {(!user) ? (
+        <div className="error-msg">Please login to view your data.</div>
+      ) : (
+        <>
+          <h2>Weekly Meal Planner</h2>
+          {error && <div className="error-msg">{error}</div>}
+          <div className="planner-table-wrapper">
+            <table className="planner-table">
+              <thead>
+                <tr>
+                  <th>Day</th>
+                  {mealTypes.map(type => <th key={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {daysOfWeek.map((day, idx) => (
+                  <tr key={day} className={idx === todayIdx ? 'today-row' : ''}>
+                    <td>{day}</td>
+                    {mealTypes.map(type => (
+                      <td key={type}>
+                        <select value={selected[`${day}-${type}`] || ''} onChange={e => handleSelect(day, type, e.target.value)}>
+                          <option value="">--</option>
+                          {recipes.map(r => <option key={r._id} value={r._id}>{r.title}</option>)}
+                        </select>
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="planner-actions">
+            <button onClick={handleSave} className="save-btn" disabled={loading}>{loading ? 'Saving...' : 'Save Meal Plan'}</button>
+            <button onClick={handleClear} className="cancel-btn">Clear</button>
+            {saved && <span className="saved-msg">Meal plan saved!</span>}
+          </div>
+          <h3>Saved Meal Plans</h3>
+          <ul className="saved-plans-list">
+            {mealPlans.map(mp => (
+              <li key={mp._id}>{new Date(mp.weekStart).toLocaleDateString()}</li>
             ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="planner-actions">
-        <button onClick={handleSave} className="save-btn" disabled={loading}>{loading ? 'Saving...' : 'Save Meal Plan'}</button>
-        <button onClick={handleClear} className="cancel-btn">Clear</button>
-        {saved && <span className="saved-msg">Meal plan saved!</span>}
-      </div>
-      <h3>Saved Meal Plans</h3>
-      <ul className="saved-plans-list">
-        {mealPlans.map(mp => (
-          <li key={mp._id}>{new Date(mp.weekStart).toLocaleDateString()}</li>
-        ))}
-      </ul>
+          </ul>
+        </>
+      )}
     </div>
   );
 };
