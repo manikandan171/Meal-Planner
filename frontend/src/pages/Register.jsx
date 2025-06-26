@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Auth.css';
 import { useNavigate } from 'react-router-dom';
+import { register as registerApi, verifyOtp as verifyOtpApi } from '../api';
 
 const Register = () => {
   const [step, setStep] = useState(1);
@@ -16,7 +17,7 @@ const Register = () => {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('/api/auth/register', form);
+      await registerApi(form);
       setEmail(form.email);
       setStep(2);
       setMessage('OTP sent to your email. Please verify.');
@@ -29,7 +30,7 @@ const Register = () => {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('/api/auth/verify-otp', { email, otp });
+      await verifyOtpApi({ email, otp });
       setMessage('Account verified! You can now log in.');
       setStep(3);
       setTimeout(() => {
