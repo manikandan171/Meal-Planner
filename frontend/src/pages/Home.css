@@ -60,10 +60,12 @@
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+  text-decoration: none;
 }
 .home-btn.secondary {
   background: var(--color-accent2);
   color: var(--color-text);
+  text-decoration: none;
 }
 .home-btn:hover {
   background: #3730a3;

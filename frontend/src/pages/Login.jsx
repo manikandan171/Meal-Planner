@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../hooks/AuthContext';
 import './Auth.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,6 +18,9 @@ const Login = () => {
     try {
       await login(email, password);
       setSuccess('Login successful!');
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
     } catch (err) {
       setError(err?.response?.data?.message || 'Invalid credentials');
     }

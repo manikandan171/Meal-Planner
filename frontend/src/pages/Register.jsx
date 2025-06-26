@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Auth.css';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [step, setStep] = useState(1);
@@ -9,6 +10,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -30,6 +32,9 @@ const Register = () => {
       await axios.post('/api/auth/verify-otp', { email, otp });
       setMessage('Account verified! You can now log in.');
       setStep(3);
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'OTP verification failed');
     }
