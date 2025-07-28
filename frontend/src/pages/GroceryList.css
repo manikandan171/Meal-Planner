@@ -1,0 +1,66 @@
+.grocerylist-main {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: var(--color-accent1);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(99,102,241,0.08);
+  padding: 2rem;
+}
+.grocery-list {
+  list-style: none;
+  padding: 0;
+}
+.grocery-list li {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  background: var(--color-accent2);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+.grocery-list li.checked {
+  background: var(--color-accent3);
+  text-decoration: line-through;
+  color: #a5b4fc;
+}
+.grocery-list input[type="checkbox"] {
+  margin-right: 1rem;
+  accent-color: var(--color-accent);
+}
+.error-msg {
+  color: #dc2626;
+  background: #fff7f7;
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+@media (max-width: 700px) {
+  .grocerylist-main {
+    max-width: 98vw;
+    padding: 1rem 0.5rem;
+    border-radius: 8px;
+  }
+  .grocery-list li {
+    font-size: 1rem;
+    padding: 0.5rem 0.7rem;
+  }
+}
+@media (max-width: 500px) {
+  .grocerylist-main {
+    padding: 0.5rem 0.1rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .grocery-list li {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.3rem;
+  }
+  .error-msg {
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+} 

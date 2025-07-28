@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Centered Sidebar</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center; /* horizontally center */
+      align-items: center;     /* vertically center */
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: bisque;
+    }
+
+    .sidebar {
+      width: 100px;
+      min-width: 80px;
+      background-color: cyan;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 4px solid blue;
+      padding: 10px 0;
+    }
+
+    .sidebar div {
+      border: 2px solid blue;
+      width: 80%;
+      height: 80px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+  </div>
+
+</body>
+</html>

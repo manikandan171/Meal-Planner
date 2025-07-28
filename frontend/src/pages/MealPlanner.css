@@ -1,0 +1,489 @@
+.mealplanner-main {
+  max-width: 1400px;
+  margin: 2rem auto;
+  background: var(--color-accent1);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(99,102,241,0.08);
+  padding: 2rem;
+  min-width: 900px;
+}
+
+.planner-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+.planner-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.planner-table th, .planner-table td {
+  border: 1px solid #e0e7ff;
+  padding: 0.75rem;
+  text-align: center;
+  background: var(--color-accent2);
+}
+
+.planner-table th {
+  background: var(--color-accent);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+.day-cell {
+  font-weight: 600;
+  color: #3730a3;
+  background: #f8fafc !important;
+}
+
+.today-row {
+  background: #fef3c7 !important;
+  border-left: 4px solid #f59e0b;
+}
+
+.meal-cell {
+  position: relative;
+  min-width: 120px;
+}
+
+.meal-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  background: white;
+  cursor: pointer;
+}
+
+.meal-select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(127, 90, 240, 0.1);
+}
+
+.selected-recipe {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #059669;
+  font-weight: 500;
+  background: #d1fae5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  word-break: break-word;
+}
+
+.planner-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.save-btn, .cancel-btn {
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #6B46C1;
+  transform: translateY(-1px);
+}
+
+.save-btn:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.success-msg {
+  color: #059669;
+  background: #d1fae5;
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.error-msg {
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.meal-plans-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.meal-plans-section h3 {
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+
+
+.meal-plans-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.meal-plan-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-width: 800px;
+}
+
+.meal-plan-card:hover {
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.plan-header h4 {
+  color: #374151;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.plan-days {
+  background: var(--color-accent);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.meal-plan-details {
+  margin-top: 1rem;
+}
+
+.details-table-wrapper {
+  margin-top: 1rem;
+  overflow-x: auto;
+  min-width: 100%;
+}
+
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  font-size: 0.875rem;
+  table-layout: fixed;
+  min-width: 700px;
+}
+
+.details-table th {
+  background: var(--color-accent);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.3rem;
+  text-align: center;
+  border: 1px solid #e0e7ff;
+}
+
+.details-table th:first-child {
+  width: 25%;
+}
+
+.details-table th:not(:first-child) {
+  width: 18.75%;
+}
+
+.details-table td {
+  border: 1px solid #e0e7ff;
+  padding: 0.3rem;
+  text-align: center;
+  background: #f8fafc;
+  vertical-align: middle;
+}
+
+.details-table td:first-child {
+  width: 25%;
+}
+
+.details-table td:not(:first-child) {
+  width: 18.75%;
+}
+
+.detail-day-cell {
+  font-weight: 600;
+  color: #3730a3;
+  background: #f1f5f9 !important;
+  width: 25%;
+  font-size: 0.8rem;
+}
+
+.detail-meal-cell {
+  width: 18.75%;
+  padding: 0.5rem !important;
+}
+
+.meal-confirmation {
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  background: #d1fae5;
+  border: 1px solid #10b981;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  color: #059669;
+  font-weight: 500;
+  text-align: center;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-word;
+  line-height: 1.2;
+  margin: 0.1rem;
+}
+
+.meal-empty {
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  color: #6b7280;
+  text-align: center;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  line-height: 1.2;
+  margin: 0.1rem;
+}
+
+.detail-row {
+  transition: background-color 0.2s;
+}
+
+.detail-row:hover {
+  background: #fef3c7 !important;
+}
+
+.no-meals {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 6px;
+  margin: 0;
+}
+
+.no-plans {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 2rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+@media (max-width: 1200px) {
+  .mealplanner-main {
+    padding: 1rem;
+    margin: 1rem;
+    min-width: 800px;
+  }
+  
+  .meal-plan-card {
+    min-width: 700px;
+    padding: 1rem;
+  }
+  
+  .details-table {
+    min-width: 600px;
+  }
+}
+  
+  .planner-table th, .planner-table td {
+    padding: 0.5rem 0.3rem;
+    font-size: 0.875rem;
+  }
+  
+  .meal-select {
+    font-size: 0.8rem;
+    padding: 0.4rem;
+  }
+  
+  .selected-recipe {
+    font-size: 0.7rem;
+  }
+  
+  .meal-plans-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+  
+
+  
+  .plan-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .details-table {
+    font-size: 0.8rem;
+  }
+  
+  .details-table th,
+  .details-table td {
+    padding: 0.25rem;
+  }
+  
+  .detail-meal-cell {
+    padding: 0.4rem !important;
+  }
+  
+  .meal-confirmation,
+  .meal-empty {
+    margin: 0.05rem;
+    padding: 0.25rem 0.4rem;
+  }
+  
+  .meal-confirmation,
+  .meal-empty {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .mealplanner-main {
+    max-width: 100vw;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border-radius: 0;
+    box-shadow: none;
+    min-width: 600px;
+  }
+  
+  .meal-plan-card {
+    min-width: 500px;
+    padding: 0.75rem;
+  }
+  
+  .details-table {
+    min-width: 450px;
+  }
+}
+  
+  .planner-table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .planner-table th, .planner-table td {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.2rem;
+    min-width: 80px;
+  }
+  
+  .meal-select {
+    font-size: 0.75rem;
+    padding: 0.3rem;
+  }
+  
+  .planner-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+  
+  .save-btn, .cancel-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .meal-plan-card {
+    padding: 1rem;
+  }
+  
+  .details-table {
+    font-size: 0.75rem;
+  }
+  
+  .details-table th,
+  .details-table td {
+    padding: 0.2rem;
+  }
+  
+  .detail-meal-cell {
+    padding: 0.3rem !important;
+  }
+  
+  .meal-confirmation,
+  .meal-empty {
+    margin: 0.05rem;
+    padding: 0.2rem 0.3rem;
+    min-height: 20px;
+    font-size: 0.7rem;
+  }
+  
+
+} 
