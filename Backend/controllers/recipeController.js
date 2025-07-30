@@ -122,13 +122,17 @@ export const recommendOnlineRecipes = async (req, res) => {
     const { data } = await axios.get(query);
     const recipes = (data.results || []).map(r => ({
       title: r.title,
-      ingredients: r.extendedIngredients?.map(i => ({ name: i.original })) || [],
-      instructions: r.analyzedInstructions?.[0]?.steps?.map(s => s.step).join(' ') || r.instructions || '',
+      ingredients: r.extendedIngredients && r.extendedIngredients.length > 0
+        ? r.extendedIngredients.map(i => ({ name: i.original }))
+        : [{ name: 'No ingredients listed' }],
+      instructions: (r.analyzedInstructions && r.analyzedInstructions[0] && r.analyzedInstructions[0].steps && r.analyzedInstructions[0].steps.length > 0)
+        ? r.analyzedInstructions[0].steps.map(s => s.step).join(' ')
+        : (r.instructions || 'No instructions provided.'),
       nutrition: {
-        calories: r.nutrition?.nutrients?.find(n => n.name === 'Calories')?.amount || 0,
-        protein: r.nutrition?.nutrients?.find(n => n.name === 'Protein')?.amount || 0,
-        carbs: r.nutrition?.nutrients?.find(n => n.name === 'Carbohydrates')?.amount || 0,
-        fat: r.nutrition?.nutrients?.find(n => n.name === 'Fat')?.amount || 0,
+        calories: r.nutrition?.nutrients?.find(n => n.name === 'Calories')?.amount ?? 'N/A',
+        protein: r.nutrition?.nutrients?.find(n => n.name === 'Protein')?.amount ?? 'N/A',
+        carbs: r.nutrition?.nutrients?.find(n => n.name === 'Carbohydrates')?.amount ?? 'N/A',
+        fat: r.nutrition?.nutrients?.find(n => n.name === 'Fat')?.amount ?? 'N/A',
       }
     }));
     res.json(recipes);
