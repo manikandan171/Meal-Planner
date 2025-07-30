@@ -41,4 +41,27 @@ export const deleteMealPlan = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+
+export const getSharedMealPlans = async (req, res) => {
+  try {
+    const mealPlans = await MealPlan.find({ sharedWith: req.user.id });
+    res.json(mealPlans);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const shareMealPlan = async (req, res) => {
+  try {
+    const { mealPlanId, userId } = req.body;
+    const mealPlan = await MealPlan.findByIdAndUpdate(
+      mealPlanId,
+      { $addToSet: { sharedWith: userId } },
+      { new: true }
+    );
+    res.json(mealPlan);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 }; 

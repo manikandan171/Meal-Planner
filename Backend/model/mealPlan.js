@@ -13,7 +13,9 @@ const mealPlanSchema = new mongoose.Schema({
         }
       ]
     }
-  ]
+  ],
+  sharedWith: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  collaborators: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 export const MealPlan = mongoose.model('MealPlan', mealPlanSchema); 

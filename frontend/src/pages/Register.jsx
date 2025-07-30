@@ -9,7 +9,7 @@ import { validatePassword } from '../utils/passwordValidation';
 
 const Register = () => {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', dietaryPreferences: [], allergies: [], dislikes: [] });
   const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -90,6 +90,30 @@ const Register = () => {
             disabled={isLoading}
           />
           <PasswordStrength password={form.password} />
+          <label>Dietary Preferences (comma separated):</label>
+          <input
+            name="dietaryPreferences"
+            placeholder="e.g. vegetarian, vegan"
+            value={form.dietaryPreferences}
+            onChange={e => setForm({ ...form, dietaryPreferences: e.target.value.split(',').map(s => s.trim()) })}
+            disabled={isLoading}
+          />
+          <label>Allergies (comma separated):</label>
+          <input
+            name="allergies"
+            placeholder="e.g. peanuts, shellfish"
+            value={form.allergies}
+            onChange={e => setForm({ ...form, allergies: e.target.value.split(',').map(s => s.trim()) })}
+            disabled={isLoading}
+          />
+          <label>Dislikes (comma separated):</label>
+          <input
+            name="dislikes"
+            placeholder="e.g. broccoli, mushrooms"
+            value={form.dislikes}
+            onChange={e => setForm({ ...form, dislikes: e.target.value.split(',').map(s => s.trim()) })}
+            disabled={isLoading}
+          />
           <button 
             type="submit" 
             disabled={isLoading}

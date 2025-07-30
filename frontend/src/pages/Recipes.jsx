@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { getRecipes, createRecipe, updateRecipe, deleteRecipe } from '../api';
+import { getRecipes, createRecipe, updateRecipe, deleteRecipe, getRecommendedRecipes, likeRecipe as likeRecipeApi, dislikeRecipe as dislikeRecipeApi } from '../api';
 import './Recipes.css';
 import { AuthContext } from '../hooks/AuthContext';
 
@@ -14,6 +14,7 @@ const Recipes = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [recommended, setRecommended] = useState([]);
 
   const fetchRecipes = async () => {
     setLoading(true);
@@ -27,7 +28,16 @@ const Recipes = () => {
     setLoading(false);
   };
 
-  useEffect(() => { fetchRecipes(); }, []);
+  useEffect(() => {
+    fetchRecipes();
+    const fetchRecommended = async () => {
+      try {
+        const res = await getRecommendedRecipes();
+        setRecommended(res.data);
+      } catch {}
+    };
+    fetchRecommended();
+  }, []);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -71,6 +81,15 @@ const Recipes = () => {
     setLoading(false);
   };
 
+  const handleLike = async (id) => {
+    await likeRecipeApi(id);
+    setRecommended(recommended.filter(r => r._id !== id));
+  };
+  const handleDislike = async (id) => {
+    await dislikeRecipeApi(id);
+    setRecommended(recommended.filter(r => r._id !== id));
+  };
+
   function getNutritionObj(f) {
     return {
       calories: Number(f.calories),
@@ -92,6 +111,40 @@ const Recipes = () => {
               {showForm ? 'Close' : 'Add Recipe'}
             </button>
           </div>
+          {recommended.length > 0 && (
+            <div className="recommended-section">
+              <h3>Recommended for You</h3>
+              <div className="recipe-cards">
+                {recommended.map(r => (
+                  <div className="recipe-card" key={r._id}>
+                    <div className="card-header">
+                      <h3>{r.title}</h3>
+                    </div>
+                    <div className="card-section">
+                      <div className="section-header">
+                        <span className="section-icon">🥕</span>
+                        <strong>Ingredients</strong>
+                      </div>
+                      <ul className="ingredients-list">
+                        {(r.ingredients && r.ingredients.map) ? r.ingredients.map((i, idx) => <li key={idx}>{i.name}</li>) : (r.ingredients || '').split(',').map((i, idx) => <li key={idx}>{i.trim()}</li>)}
+                      </ul>
+                    </div>
+                    <div className="card-section">
+                      <div className="section-header">
+                        <span className="section-icon">📋</span>
+                        <strong>Instructions</strong>
+                      </div>
+                      <div className="instructions">{r.instructions}</div>
+                    </div>
+                    <div className="feedback-btns">
+                      <button className="like-btn" onClick={() => handleLike(r._id)}>Like 👍</button>
+                      <button className="dislike-btn" onClick={() => handleDislike(r._id)}>Dislike 👎</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {error && <div className="error-msg">{error}</div>}
           {showForm && (
             <form onSubmit={handleSubmit} className="recipe-form">

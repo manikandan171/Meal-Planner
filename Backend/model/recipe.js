@@ -11,6 +11,9 @@ const recipeSchema = new mongoose.Schema({
     carbs: Number,
     fat: Number
   },
+  categories: { type: [String], default: [] },
+  cuisine: { type: String, default: '' },
+  prepTime: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now }
 });
 

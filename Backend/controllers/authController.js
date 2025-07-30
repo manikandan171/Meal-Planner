@@ -125,4 +125,19 @@ export const getProfile = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+
+// Add updateProfile endpoint
+export const updateProfile = async (req, res) => {
+  try {
+    const { dietaryPreferences, allergies, dislikes, goals } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: { dietaryPreferences, allergies, dislikes, goals } },
+      { new: true }
+    ).select('-password');
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 }; 

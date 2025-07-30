@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   dietaryPreferences: { type: [String], default: [] },
   allergies: { type: [String], default: [] },
+  dislikes: { type: [String], default: [] },
+  goals: { type: String, default: '' },
+  likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
+  dislikedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
   createdAt: { type: Date, default: Date.now },
   isVerified: { type: Boolean, default: false },
   otp: String, // hashed OTP

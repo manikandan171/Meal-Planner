@@ -10,6 +10,7 @@ import MealPlanner from './pages/MealPlanner';
 import GroceryList from './pages/GroceryList';
 import Nutrition from './pages/Nutrition';
 import ForgotPassword from './pages/ForgotPassword';
+import Profile from './pages/Profile';
 import './App.css';
 
 const NotFound = () => (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/mealplanner" element={<MealPlanner />} />
         <Route path="/nutrition" element={<Nutrition />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AuthProvider>
