@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { getRecipes, createRecipe, updateRecipe, deleteRecipe, getRecommendedRecipes, likeRecipe as likeRecipeApi, dislikeRecipe as dislikeRecipeApi, getOnlineRecommendedRecipes } from '../api';
+import { getRecipes, createRecipe, updateRecipe, deleteRecipe, getRecommendedRecipes, likeRecipe as likeRecipeApi, dislikeRecipe as dislikeRecipeApi, getOnlineRecommendedRecipes, importOnlineRecipe } from '../api';
 import './Recipes.css';
 import { AuthContext } from '../hooks/AuthContext';
 
@@ -16,6 +16,7 @@ const Recipes = () => {
   const [error, setError] = useState('');
   const [recommended, setRecommended] = useState([]);
   const [onlineRecommended, setOnlineRecommended] = useState([]);
+  const [message, setMessage] = useState('');
 
   const fetchRecipes = async () => {
     setLoading(true);
@@ -99,22 +100,19 @@ const Recipes = () => {
   };
 
   const handleLikeOnline = async (recipe) => {
-    // Call backend to save the recipe to user's recipes (endpoint to be implemented)
     try {
-      await fetch('/api/recipes/import', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(recipe),
-      });
-      // Optionally, remove from onlineRecommended after like
+      const response = await importOnlineRecipe(recipe);
+      
+      // Remove from onlineRecommended after successful import
       setOnlineRecommended(onlineRecommended.filter(r => r.title !== recipe.title));
-      // Optionally, refresh local recipes
+      // Refresh local recipes to show the newly imported recipe
       fetchRecipes();
+      // Show success message
+      setMessage(`"${recipe.title}" has been added to your recipes!`);
+      setTimeout(() => setMessage(''), 3000);
     } catch (err) {
-      // handle error
+      setError('Failed to import recipe. Please try again.');
+      console.error('Error importing recipe:', err);
     }
   };
   const handleDislikeOnline = (title) => {
@@ -239,6 +237,7 @@ const Recipes = () => {
             </div>
           )}
           {error && <div className="error-msg">{error}</div>}
+          {message && <div className="success-msg">{message}</div>}
           {showForm && (
             <form onSubmit={handleSubmit} className="recipe-form">
               <input name="title" placeholder="Title" value={form.title} onChange={handleChange} required />

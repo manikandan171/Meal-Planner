@@ -29,6 +29,7 @@ export const getRecommendedRecipes = () => API.get('/recipes/recommendations');
 export const likeRecipe = (id) => API.post(`/recipes/${id}/like`);
 export const dislikeRecipe = (id) => API.post(`/recipes/${id}/dislike`);
 export const getOnlineRecommendedRecipes = () => API.get('/recipes/online-recommendations');
+export const importOnlineRecipe = (recipeData) => API.post('/recipes/import', recipeData);
 
 // Meal Plans
 export const getMealPlans = () => API.get('/mealplans');

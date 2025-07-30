@@ -22,6 +22,16 @@ const MealPlanner = () => {
     fetchData();
   }, []);
 
+  // Add a refresh function that can be called when needed
+  const refreshRecipes = async () => {
+    try {
+      const rRes = await getRecipes();
+      setRecipes(rRes.data);
+    } catch (err) {
+      console.error('Failed to refresh recipes:', err);
+    }
+  };
+
   const fetchData = async () => {
     setError('');
     setLoading(true);
@@ -52,6 +62,7 @@ const MealPlanner = () => {
       }
     } catch (err) {
       setError('Could not load meal plans. Please try again later.');
+      console.error('Error fetching data:', err);
     } finally {
       setLoading(false);
     }

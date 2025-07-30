@@ -152,19 +152,33 @@ export const importRecipe = async (req, res) => {
   try {
     const userId = req.user.id;
     const { title, ingredients, instructions, nutrition } = req.body;
+    
+    // Validate required fields
+    if (!title || !instructions) {
+      return res.status(400).json({ message: 'Title and instructions are required.' });
+    }
+    
+    // Check if recipe already exists for this user
+    const existingRecipe = await Recipe.findOne({ user: userId, title: title });
+    if (existingRecipe) {
+      return res.status(400).json({ message: 'Recipe already exists in your collection.' });
+    }
+    
     const newRecipe = new Recipe({
       user: userId,
       title,
-      ingredients,
+      ingredients: ingredients || [],
       instructions,
-      nutrition,
+      nutrition: nutrition || { calories: 0, protein: 0, carbs: 0, fat: 0 },
       categories: [],
       cuisine: '',
       prepTime: 0,
     });
+    
     await newRecipe.save();
     res.status(201).json(newRecipe);
   } catch (err) {
+    console.error('Error importing recipe:', err);
     res.status(500).json({ message: 'Failed to import recipe.' });
   }
 }; 
