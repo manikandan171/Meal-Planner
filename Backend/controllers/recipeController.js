@@ -1,5 +1,6 @@
 import { Recipe } from '../model/recipe.js';
 import axios from 'axios';
+import { API_KEYS } from '../config/api.js';
 
 export const getRecipes = async (req, res) => {
   try {
@@ -107,7 +108,7 @@ export const dislikeRecipe = async (req, res) => {
 export const recommendOnlineRecipes = async (req, res) => {
   try {
     const { dietaryPreferences, allergies, dislikes } = req.user;
-    const apiKey = process.env.SPOONACULAR_API_KEY;
+    const apiKey = API_KEYS.SPOONACULAR_API_KEY;
     let query = `https://api.spoonacular.com/recipes/complexSearch?number=5&addRecipeInformation=true&addNutrition=true&apiKey=${apiKey}`;
     if (dietaryPreferences && dietaryPreferences.length > 0) {
       query += `&diet=${encodeURIComponent(dietaryPreferences.join(','))}`;
