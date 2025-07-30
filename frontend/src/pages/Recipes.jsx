@@ -98,6 +98,29 @@ const Recipes = () => {
     setRecommended(recommended.filter(r => r._id !== id));
   };
 
+  const handleLikeOnline = async (recipe) => {
+    // Call backend to save the recipe to user's recipes (endpoint to be implemented)
+    try {
+      await fetch('/api/recipes/import', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(recipe),
+      });
+      // Optionally, remove from onlineRecommended after like
+      setOnlineRecommended(onlineRecommended.filter(r => r.title !== recipe.title));
+      // Optionally, refresh local recipes
+      fetchRecipes();
+    } catch (err) {
+      // handle error
+    }
+  };
+  const handleDislikeOnline = (title) => {
+    setOnlineRecommended(onlineRecommended.filter(r => r.title !== title));
+  };
+
   function getNutritionObj(f) {
     return {
       calories: Number(f.calories),
@@ -119,6 +142,40 @@ const Recipes = () => {
               {showForm ? 'Close' : 'Add Recipe'}
             </button>
           </div>
+          {recommended.length > 0 && (
+            <div className="recommended-section">
+              <h3>Recommended for You</h3>
+              <div className="recipe-cards">
+                {recommended.map(r => (
+                  <div className="recipe-card" key={r._id}>
+                    <div className="card-header">
+                      <h3>{r.title}</h3>
+                    </div>
+                    <div className="card-section">
+                      <div className="section-header">
+                        <span className="section-icon">🥕</span>
+                        <strong>Ingredients</strong>
+                      </div>
+                      <ul className="ingredients-list">
+                        {(r.ingredients && r.ingredients.map) ? r.ingredients.map((i, idx) => <li key={idx}>{i.name}</li>) : (r.ingredients || '').split(',').map((i, idx) => <li key={idx}>{i.trim()}</li>)}
+                      </ul>
+                    </div>
+                    <div className="card-section">
+                      <div className="section-header">
+                        <span className="section-icon">📋</span>
+                        <strong>Instructions</strong>
+                      </div>
+                      <div className="instructions">{r.instructions}</div>
+                    </div>
+                    <div className="feedback-btns">
+                      <button className="like-btn" onClick={() => handleLike(r._id)}>Like 👍</button>
+                      <button className="dislike-btn" onClick={() => handleDislike(r._id)}>Dislike 👎</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {onlineRecommended.length > 0 && (
             <div className="recommended-section">
               <h3>Online Recommendations</h3>
@@ -153,58 +210,28 @@ const Recipes = () => {
                         <div className="nutrition-item">
                           <span className="nutrition-icon">🔥</span>
                           <span className="nutrition-label">Calories:</span>
-                          <span className="nutrition-value">{r.nutrition?.calories || 0}</span>
+                          <span className="nutrition-value">{r.nutrition?.calories || 'N/A'}</span>
                         </div>
                         <div className="nutrition-item">
                           <span className="nutrition-icon">🥩</span>
                           <span className="nutrition-label">Protein:</span>
-                          <span className="nutrition-value">{r.nutrition?.protein || 0}g</span>
+                          <span className="nutrition-value">{r.nutrition?.protein || 'N/A'}g</span>
                         </div>
                         <div className="nutrition-item">
                           <span className="nutrition-icon">🍞</span>
                           <span className="nutrition-label">Carbs:</span>
-                          <span className="nutrition-value">{r.nutrition?.carbs || 0}g</span>
+                          <span className="nutrition-value">{r.nutrition?.carbs || 'N/A'}g</span>
                         </div>
                         <div className="nutrition-item">
                           <span className="nutrition-icon">🧈</span>
                           <span className="nutrition-label">Fat:</span>
-                          <span className="nutrition-value">{r.nutrition?.fat || 0}g</span>
+                          <span className="nutrition-value">{r.nutrition?.fat || 'N/A'}g</span>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {recommended.length > 0 && (
-            <div className="recommended-section">
-              <h3>Recommended for You</h3>
-              <div className="recipe-cards">
-                {recommended.map(r => (
-                  <div className="recipe-card" key={r._id}>
-                    <div className="card-header">
-                      <h3>{r.title}</h3>
-                    </div>
-                    <div className="card-section">
-                      <div className="section-header">
-                        <span className="section-icon">🥕</span>
-                        <strong>Ingredients</strong>
-                      </div>
-                      <ul className="ingredients-list">
-                        {(r.ingredients && r.ingredients.map) ? r.ingredients.map((i, idx) => <li key={idx}>{i.name}</li>) : (r.ingredients || '').split(',').map((i, idx) => <li key={idx}>{i.trim()}</li>)}
-                      </ul>
-                    </div>
-                    <div className="card-section">
-                      <div className="section-header">
-                        <span className="section-icon">📋</span>
-                        <strong>Instructions</strong>
-                      </div>
-                      <div className="instructions">{r.instructions}</div>
-                    </div>
                     <div className="feedback-btns">
-                      <button className="like-btn" onClick={() => handleLike(r._id)}>Like 👍</button>
-                      <button className="dislike-btn" onClick={() => handleDislike(r._id)}>Dislike 👎</button>
+                      <button className="like-btn" onClick={() => handleLikeOnline(r)}>Like 👍</button>
+                      <button className="dislike-btn" onClick={() => handleDislikeOnline(r.title)}>Dislike 👎</button>
                     </div>
                   </div>
                 ))}

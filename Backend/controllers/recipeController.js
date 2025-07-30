@@ -146,4 +146,25 @@ export const recommendOnlineRecipes = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch online recipes.' });
   }
+};
+
+export const importRecipe = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { title, ingredients, instructions, nutrition } = req.body;
+    const newRecipe = new Recipe({
+      user: userId,
+      title,
+      ingredients,
+      instructions,
+      nutrition,
+      categories: [],
+      cuisine: '',
+      prepTime: 0,
+    });
+    await newRecipe.save();
+    res.status(201).json(newRecipe);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to import recipe.' });
+  }
 }; 
