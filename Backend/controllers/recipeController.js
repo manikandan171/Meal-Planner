@@ -1,4 +1,5 @@
 import { Recipe } from '../model/recipe.js';
+import axios from 'axios';
 
 export const getRecipes = async (req, res) => {
   try {
@@ -100,5 +101,37 @@ export const dislikeRecipe = async (req, res) => {
     res.json({ message: 'Recipe disliked' });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+export const recommendOnlineRecipes = async (req, res) => {
+  try {
+    const { dietaryPreferences, allergies, dislikes } = req.user;
+    const apiKey = process.env.SPOONACULAR_API_KEY;
+    let query = `https://api.spoonacular.com/recipes/complexSearch?number=5&addRecipeInformation=true&addNutrition=true&apiKey=${apiKey}`;
+    if (dietaryPreferences && dietaryPreferences.length > 0) {
+      query += `&diet=${encodeURIComponent(dietaryPreferences.join(','))}`;
+    }
+    if (allergies && allergies.length > 0) {
+      query += `&intolerances=${encodeURIComponent(allergies.join(','))}`;
+    }
+    if (dislikes && dislikes.length > 0) {
+      query += `&excludeIngredients=${encodeURIComponent(dislikes.join(','))}`;
+    }
+    const { data } = await axios.get(query);
+    const recipes = (data.results || []).map(r => ({
+      title: r.title,
+      ingredients: r.extendedIngredients?.map(i => ({ name: i.original })) || [],
+      instructions: r.analyzedInstructions?.[0]?.steps?.map(s => s.step).join(' ') || r.instructions || '',
+      nutrition: {
+        calories: r.nutrition?.nutrients?.find(n => n.name === 'Calories')?.amount || 0,
+        protein: r.nutrition?.nutrients?.find(n => n.name === 'Protein')?.amount || 0,
+        carbs: r.nutrition?.nutrients?.find(n => n.name === 'Carbohydrates')?.amount || 0,
+        fat: r.nutrition?.nutrients?.find(n => n.name === 'Fat')?.amount || 0,
+      }
+    }));
+    res.json(recipes);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch online recipes.' });
   }
 }; 

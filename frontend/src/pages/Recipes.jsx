@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { getRecipes, createRecipe, updateRecipe, deleteRecipe, getRecommendedRecipes, likeRecipe as likeRecipeApi, dislikeRecipe as dislikeRecipeApi } from '../api';
+import { getRecipes, createRecipe, updateRecipe, deleteRecipe, getRecommendedRecipes, likeRecipe as likeRecipeApi, dislikeRecipe as dislikeRecipeApi, getOnlineRecommendedRecipes } from '../api';
 import './Recipes.css';
 import { AuthContext } from '../hooks/AuthContext';
 
@@ -15,6 +15,7 @@ const Recipes = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [recommended, setRecommended] = useState([]);
+  const [onlineRecommended, setOnlineRecommended] = useState([]);
 
   const fetchRecipes = async () => {
     setLoading(true);
@@ -37,6 +38,13 @@ const Recipes = () => {
       } catch {}
     };
     fetchRecommended();
+    const fetchOnlineRecommended = async () => {
+      try {
+        const res = await getOnlineRecommendedRecipes();
+        setOnlineRecommended(res.data);
+      } catch {}
+    };
+    fetchOnlineRecommended();
   }, []);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
@@ -111,6 +119,64 @@ const Recipes = () => {
               {showForm ? 'Close' : 'Add Recipe'}
             </button>
           </div>
+          {onlineRecommended.length > 0 && (
+            <div className="recommended-section">
+              <h3>Online Recommendations</h3>
+              <div className="recipe-cards">
+                {onlineRecommended.map((r, idx) => (
+                  <div className="recipe-card" key={r.title + idx}>
+                    <div className="card-header">
+                      <h3>{r.title}</h3>
+                    </div>
+                    <div className="card-section">
+                      <div className="section-header">
+                        <span className="section-icon">🥕</span>
+                        <strong>Ingredients</strong>
+                      </div>
+                      <ul className="ingredients-list">
+                        {r.ingredients && r.ingredients.map ? r.ingredients.map((i, idx) => <li key={idx}>{i.name}</li>) : null}
+                      </ul>
+                    </div>
+                    <div className="card-section">
+                      <div className="section-header">
+                        <span className="section-icon">📋</span>
+                        <strong>Instructions</strong>
+                      </div>
+                      <div className="instructions">{r.instructions}</div>
+                    </div>
+                    <div className="card-section nutrition">
+                      <div className="section-header">
+                        <span className="section-icon">🍽️</span>
+                        <strong>Nutrition Facts</strong>
+                      </div>
+                      <div className="nutrition-grid">
+                        <div className="nutrition-item">
+                          <span className="nutrition-icon">🔥</span>
+                          <span className="nutrition-label">Calories:</span>
+                          <span className="nutrition-value">{r.nutrition?.calories || 0}</span>
+                        </div>
+                        <div className="nutrition-item">
+                          <span className="nutrition-icon">🥩</span>
+                          <span className="nutrition-label">Protein:</span>
+                          <span className="nutrition-value">{r.nutrition?.protein || 0}g</span>
+                        </div>
+                        <div className="nutrition-item">
+                          <span className="nutrition-icon">🍞</span>
+                          <span className="nutrition-label">Carbs:</span>
+                          <span className="nutrition-value">{r.nutrition?.carbs || 0}g</span>
+                        </div>
+                        <div className="nutrition-item">
+                          <span className="nutrition-icon">🧈</span>
+                          <span className="nutrition-label">Fat:</span>
+                          <span className="nutrition-value">{r.nutrition?.fat || 0}g</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {recommended.length > 0 && (
             <div className="recommended-section">
               <h3>Recommended for You</h3>
