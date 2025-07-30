@@ -120,21 +120,28 @@ export const recommendOnlineRecipes = async (req, res) => {
       query += `&excludeIngredients=${encodeURIComponent(dislikes.join(','))}`;
     }
     const { data } = await axios.get(query);
-    const recipes = (data.results || []).map(r => ({
-      title: r.title,
-      ingredients: r.extendedIngredients && r.extendedIngredients.length > 0
-        ? r.extendedIngredients.map(i => ({ name: i.original }))
-        : [{ name: 'No ingredients listed' }],
-      instructions: (r.analyzedInstructions && r.analyzedInstructions[0] && r.analyzedInstructions[0].steps && r.analyzedInstructions[0].steps.length > 0)
-        ? r.analyzedInstructions[0].steps.map(s => s.step).join(' ')
-        : (r.instructions || 'No instructions provided.'),
-      nutrition: {
-        calories: r.nutrition?.nutrients?.find(n => n.name === 'Calories')?.amount ?? 'N/A',
-        protein: r.nutrition?.nutrients?.find(n => n.name === 'Protein')?.amount ?? 'N/A',
-        carbs: r.nutrition?.nutrients?.find(n => n.name === 'Carbohydrates')?.amount ?? 'N/A',
-        fat: r.nutrition?.nutrients?.find(n => n.name === 'Fat')?.amount ?? 'N/A',
+    const recipes = [];
+    for (const r of data.results || []) {
+      try {
+        const detailsRes = await axios.get(
+          `https://api.spoonacular.com/recipes/${r.id}/information?includeNutrition=true&apiKey=${apiKey}`
+        );
+        const details = detailsRes.data;
+        recipes.push({
+          title: details.title,
+          ingredients: details.extendedIngredients?.map(i => ({ name: i.original })) || [{ name: 'No ingredients listed' }],
+          instructions: details.analyzedInstructions?.[0]?.steps?.map(s => s.step).join(' ') || details.instructions || 'No instructions provided.',
+          nutrition: {
+            calories: details.nutrition?.nutrients?.find(n => n.name === 'Calories')?.amount ?? 'N/A',
+            protein: details.nutrition?.nutrients?.find(n => n.name === 'Protein')?.amount ?? 'N/A',
+            carbs: details.nutrition?.nutrients?.find(n => n.name === 'Carbohydrates')?.amount ?? 'N/A',
+            fat: details.nutrition?.nutrients?.find(n => n.name === 'Fat')?.amount ?? 'N/A',
+          }
+        });
+      } catch (err) {
+        // Optionally handle errors for individual recipes
       }
-    }));
+    }
     res.json(recipes);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch online recipes.' });
